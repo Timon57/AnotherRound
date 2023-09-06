@@ -35,7 +35,7 @@
                     <a class="btn btn-success btn-block">Back to Home</a>
                 </div>
                 <div class="col-md-6 d-flex justify-content-end">
-                    <button type="submit" value="Add to Cart" class="btn btn-primary btn-block">
+                    <button type="submit" id="add-button" value="{{product.id}}" class="btn btn-primary btn-block">
                         Add to Cart
                     </button>
                 </div>
@@ -43,5 +43,27 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+        $('#add-button').on('click',function(e){
+            e.preventDefault();
+            $.ajax({
+                type:'POST',
+                url:'{% url 'cart-summary' %}'
+                data:{
+                    productid:$('#add-button').val(),
+                    csrfmiddlewaretoken:"{{csrf_token}}",
+                    action:'post'
+                },
+                success:function(json)
+                {
+
+                },
+                error:function(xhr,errmsg,err){}
+            });
+        });
+    });
+</script>
+
 
 {% endblock %}
