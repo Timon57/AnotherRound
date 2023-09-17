@@ -2,6 +2,96 @@
 {% load static%}
 {% block title %}Cart summary{% endblock %}
 
-{%block content%}
-    Basket Page
+{% block content %}
+<main class="pt-5">
+    <div class="container">
+        <h1 class="h5">Shopping Cart</h1>
+        {% for item in cart %}
+        {% with product=item.product %}
+        <div data-index="{{ product.id }}" class="row mb-4 border product-item">
+            <div class="col-md-3 col-lg-2 order-md-first bg-light">
+                <img class="img-fluid mx-auto d-block" width="120px" alt="Responsive image"
+                    src="{{ product.images.url }}">
+            </div>
+            <div class="col-md-9 col-lg-10 ps-md-3 ps-lg-10">
+                <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-reset">
+                    <h1 class="h5 pt-2">{{ product.title }}</h1>
+                </a>
+                <div class="border">
+                    <div class="col border-bottom">
+                        <div class="row p-3">
+                            <div class="col-6">{{ product.category.name }}</div>
+                            <div class="col-6 text-end"><span class="h6 fw-bold">Rs.{{ product.price }}</span></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row p-3">
+                            <div class="col-12">
+                                <label for="select">Qty</label>
+                                <input type="number" id="quantity{{ product.id }}"
+                                    value="{{ item.qty }}">
+                                <button type="button" data-index="{{ product.id }}"
+                                    class="btn btn-outline-secondary btn-sm update-button"> <!-- using data-index instead to make unique -->
+                                    Update
+                                </button>
+                                <button type="button" data-index="{{ product.id }}"
+                                    class="btn btn-outline-secondary btn-sm delete-button">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+        <div class="col-12 text-end">
+            <div class="h6 fw-bold">Sub Total: Rs.<div id="subtotal" class="d-inline-flex">{{ cart.get_total_price }}</div></div>
+        </div>
+    </div>
+</main>
+<script>
+    $(document).on('click', '.delete-button', function (e) {
+        e.preventDefault();
+        var pid = $(this).data('index');
+        $.ajax({
+            type: 'POST',
+            url: '{% url 'cart_delete' %}',
+            data: {
+                productid: pid,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'post'
+            },
+            success: function (json) {
+                $('.product-item[data-index="' + pid + '"]').remove();
+                // Update the subtotal after deleting
+                $('#cart-qty').text(json.qty);
+                $('#subtotal').text(json.total); 
+            },
+            error: function (xhr, errmsg, err) { }
+        });
+    });
+
+    $(document).on('click', '.update-button', function (e) {
+        e.preventDefault();
+        var pid = $(this).data('index');
+        var newQty = $('#quantity' + pid).val();
+        $.ajax({
+            type: 'POST',
+            url: '{% url 'cart_update' %}',
+            data: {
+                productid: pid,
+                productqty: newQty,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'post'
+            },
+            success: function (json) {
+              $('#cart-qty').text(json.qty);
+              $('#subtotal').text(json.total);      
+            },
+            error: function (xhr, errmsg, err) { }
+        });
+    });
+</script>
 {% endblock %}

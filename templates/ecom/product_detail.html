@@ -16,11 +16,16 @@
                     <img src="{{product.images.url}}" width="100%" class="rounded" />
                 </div>
                 <div class="col-md-6">
-                    <h5 class="text-muted">Brand: {{product.brand}}</h5>
-                    <h5 class="text-muted">Price: Rs {{product.price}}</s></h5>
-                    <h5 class="text-muted">volume: {{product.volume}} l</h5>
-                    <h5 class="text-muted">Alcohol: {{product.alcohol}}%</h5>
-                    
+                    <h6 class="text-muted">Brand: {{product.brand}}</h6>
+                    <h6 class="text-muted">Price: Rs {{product.price}}</s></h6>
+                    <h6 class="text-muted">volume: {{product.volume}} l</h6>
+                    <h6 class="text-muted">Alcohol: {{product.alcohol}}%</h6>
+
+                    <div class="d-flex align-items-center">
+                        <h6 class="text-muted">Quantity: &nbsp</h6>
+                        <input type="number" id="quantity">
+                    </div>
+
                 </div>
             </div>
             <div class="row mt-3">
@@ -44,26 +49,25 @@
     </div>
 </div>
 <script>
-    $(document).ready(function(){
-        $('#add-button').on('click',function(e){
-            e.preventDefault();
-            $.ajax({
-                type:'POST',
-                url:'{% url 'cart-summary' %}'
-                data:{
-                    productid:$('#add-button').val(),
-                    csrfmiddlewaretoken:"{{csrf_token}}",
-                    action:'post'
-                },
-                success:function(json)
-                {
-
-                },
-                error:function(xhr,errmsg,err){}
-            });
+    $(document).on('click', '#add-button', function (e) {
+        e.preventDefault();
+        var productId = $(this).val(); 
+        var quantity = $('#quantity').val()
+        $.ajax({
+            type: 'POST',
+            url: '{% url "cart-add" %}',
+            data: {
+                productid: productId,
+                productqty: quantity,
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                action: 'post'
+            },
+            success: function (json) {
+               document.getElementById("cart-qty").innerHTML = json.qty
+            },
+            error: function (xhr, errmsg, err) {}
         });
-    });
+    })
 </script>
-
 
 {% endblock %}
