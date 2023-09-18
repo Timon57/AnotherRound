@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-
+from anotherRound import settings
 class ProductManager(models.Manager):
     def get_queryset(self):
         return super(ProductManager,self).get_queryset().filter(is_active=True)
@@ -24,6 +24,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     category = models.ForeignKey(Category,related_name='product',on_delete=models.CASCADE)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     title = models.CharField(max_length=250)
     description = models.TextField()
     alcohol = models.IntegerField()
