@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,PermissionsMixin)
 from django.utils.translation import gettext_lazy as _ 
+from django.core.mail import send_mail
 
 
 class CustomAccountManager(BaseUserManager):
@@ -42,6 +43,16 @@ class UserBase(AbstractBaseUser,PermissionsMixin):
     objects = CustomAccountManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+
+    def email_user(self, subject, message):
+        send_mail(
+            subject,
+            message,
+            'l@1.com',
+            [self.email],
+            fail_silently=False,
+        )
+
 
     class Meta:
         verbose_name = 'Accounts'

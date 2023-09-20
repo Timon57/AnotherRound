@@ -23,21 +23,21 @@
                                 {% endfor %}
                                 {% endif %}
 
-                                <label>{{ form.user_name.label }}<span class="text-muted small">
+                                <label>{{ form.username.label }}<span class="text-muted small">
                                         (Required)</span></label>
-                                {{ form.user_name }}
+                                {{ form.username }}<br>
                                 <label>{{ form.email.label}}<span class="text-muted small">
                                         (Required)</span></label>
-                                {{ form.email }}
+                                {{ form.email }}<br>
                                 <label>{{ form.password.label}}<span class="text-muted mb-4">
                                         </span></label>
                                  <small class="form-text text-muted mb-4 small">
                                     At least 8 characters and 1 digit
                                 </small>
-                                {{ form.password }}
+                                {{ form.password }}<br>
                                 <label>{{ form.password2.label}}<span class="text-muted small">
                                         (Required)</span></label>
-                                {{ form.password2 }}
+                                {{ form.password2 }}<br>
                                 <button class="btn btn-primary btn-block py-2 mb-4 mt-5 fw500 w-100" type="submit">Register</button>
                                 <p class="text-center">
                                     <a href="">Already have an account?</a>
