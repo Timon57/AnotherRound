@@ -1,6 +1,6 @@
 from django import forms
 from .models import UserBase
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm,PasswordResetForm,SetPasswordForm
 
 class RegistrationForm(forms.ModelForm):
     username = forms.CharField(label='Enter Username',min_length=4,max_length=50,help_text='Required')
@@ -71,3 +71,25 @@ class UserEditForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['username'].required = True
         self.fields['email'].required = True
+
+
+class PwdResetForm(PasswordResetForm):
+    email = forms.EmailField(max_length=255,widget=forms.TextInput(attrs={'class':'form-control mb-3','placeholder':'Email','id':'form-email'}))
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        u = UserBase.objects.filter(email=email)
+        if not u:
+            raise forms.ValidationError(
+                'Unfortunately we can not find that email address'
+            )
+        return email
+
+class PwdResetConfirmForm(SetPasswordForm):
+    new_password1 = forms.CharField(
+        label='New password', widget=forms.PasswordInput(
+            attrs={'class': 'form-control mb-3', 'placeholder': 'New Password', 'id': 'form-newpass'}))
+    new_password2 = forms.CharField(
+        label='Repeat password', widget=forms.PasswordInput(
+            attrs={'class': 'form-control mb-3', 'placeholder': 'New Password', 'id': 'form-new-pass2'}))
+
