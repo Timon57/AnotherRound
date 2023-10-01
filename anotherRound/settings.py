@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-u4n$8epsiwu21q-f0r_*-(fw$9xf9^0qjoj=5o69$d^vopap9(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1","localhost",]
 
 
 # Application definition
@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ecom',
     'cart',
-    'account'
+    'account',
+    'payment',
+    'orders'
 ]
 
 MIDDLEWARE = [
@@ -52,6 +54,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+
 
 ROOT_URLCONF = 'anotherRound.urls'
 
@@ -146,3 +151,7 @@ PASSWORD_RESET_TIMEOUT_DAYS = 2
 
 #Email setting
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+#stripe Pyament
+
+STRIPE_ENDPOINT_SECRET = 'whsec_myIuLuukACB4Mo9HQH0ZyqgOeEc4yYov'

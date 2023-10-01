@@ -87,4 +87,8 @@ class Cart():
 
     def save(self):
         self.session.modified = True
+
+    def clear(self):
+        del self.session['skey']
+        self.save()
         
